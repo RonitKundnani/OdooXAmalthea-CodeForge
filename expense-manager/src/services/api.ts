@@ -160,4 +160,42 @@ export const usersAPI = {
   },
 };
 
+// OCR API
+export const ocrAPI = {
+  scanReceipt: async (file: File) => {
+    const formData = new FormData();
+    formData.append('receipt', file);
+    const response = await api.post('/ocr/scan', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  uploadReceipt: async (file: File, expenseId?: number) => {
+    const formData = new FormData();
+    formData.append('receipt', file);
+    if (expenseId) {
+      formData.append('expenseId', expenseId.toString());
+    }
+    const response = await api.post('/ocr/upload-receipt', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  getReceipts: async (expenseId: number) => {
+    const response = await api.get(`/ocr/receipts/${expenseId}`);
+    return response.data;
+  },
+
+  deleteReceipt: async (receiptId: number) => {
+    const response = await api.delete(`/ocr/receipts/${receiptId}`);
+    return response.data;
+  },
+};
+
 export default api;

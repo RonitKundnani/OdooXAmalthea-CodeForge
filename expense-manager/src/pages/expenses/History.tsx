@@ -1,15 +1,62 @@
-import React, { useState } from 'react';
-import { Download, Filter, Eye, Edit, Calendar, Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Download, Filter, Eye, Edit, Calendar, Search, Loader2, AlertCircle } from 'lucide-react';
 import { StatusBadge } from '../../components/ui/StatusBadge';
-
-const rows = [
-  { id: 'e1', date: '2025-09-10', category: 'Travel', amount: 120.5, currency: 'USD', status: 'approved' as const },
-  { id: 'e2', date: '2025-09-14', category: 'Meals', amount: 45.0, currency: 'USD', status: 'pending' as const },
-  { id: 'e3', date: '2025-09-20', category: 'Office Supplies', amount: 89.99, currency: 'USD', status: 'rejected' as const },
-];
+import { expensesAPI } from '../../services/api';
 
 export default function History() {
   const [query, setQuery] = useState('');
+  const [expenses, setExpenses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
+
+  const fetchExpenses = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const response = await expensesAPI.getExpenses();
+      setExpenses(response.expenses || []);
+    } catch (err: any) {
+      console.error('Fetch expenses error:', err);
+      setError(err.response?.data?.error || 'Failed to load expenses');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter expenses
+  const filteredExpenses = expenses.filter((expense) => {
+    const matchesSearch = 
+      expense.category?.toLowerCase().includes(query.toLowerCase()) ||
+      expense.description?.toLowerCase().includes(query.toLowerCase());
+    
+    const matchesStatus = 
+      statusFilter === 'All' || 
+      expense.status?.toLowerCase() === statusFilter.toLowerCase();
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-[#61C0BF]" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center">
+        <AlertCircle className="w-5 h-5 mr-2" />
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in">
@@ -37,7 +84,17 @@ export default function History() {
         </div>
         <div className="mt-2 flex gap-2 flex-wrap">
           {['All','Pending','Approved','Rejected'].map((chip)=> (
-            <button key={chip} className="px-3 py-1 rounded-full border text-xs bg-white hover:bg-[#FAE3D9]">{chip}</button>
+            <button 
+              key={chip} 
+              onClick={() => setStatusFilter(chip)}
+              className={`px-3 py-1 rounded-full border text-xs ${
+                statusFilter === chip 
+                  ? 'bg-[#61C0BF] text-white border-[#61C0BF]' 
+                  : 'bg-white hover:bg-[#FAE3D9]'
+              }`}
+            >
+              {chip}
+            </button>
           ))}
         </div>
       </div>
@@ -54,22 +111,49 @@ export default function History() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((r, idx)=> (
-              <tr key={r.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-[#FFF4F2]'}>
-                <td className="px-4 py-3"><div className="inline-flex items-center"><Calendar size={14} className="text-gray-400 mr-2"/>{r.date}</div></td>
-                <td className="px-4 py-3">{r.category}</td>
-                <td className="px-4 py-3 font-medium">{r.currency} {r.amount.toFixed(2)}</td>
-                <td className="px-4 py-3"><StatusBadge status={r.status} size="sm"/></td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-2 justify-end">
-                    <button className="px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50 inline-flex items-center"><Eye size={15}/></button>
-                    {r.status === 'pending' && (
-                      <button className="px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50 inline-flex items-center"><Edit size={15}/></button>
-                    )}
-                  </div>
+            {filteredExpenses.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                  {expenses.length === 0 ? 'No expenses found. Submit your first expense!' : 'No expenses match your search.'}
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredExpenses.map((expense, idx)=> (
+                <tr key={expense.expense_id} className={idx % 2 === 0 ? 'bg-white' : 'bg-[#FFF4F2]'}>
+                  <td className="px-4 py-3">
+                    <div className="inline-flex items-center">
+                      <Calendar size={14} className="text-gray-400 mr-2"/>
+                      {new Date(expense.expense_date).toLocaleDateString()}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">{expense.category}</td>
+                  <td className="px-4 py-3 font-medium">
+                    {expense.currency_code} {parseFloat(expense.amount_original).toFixed(2)}
+                  </td>
+                  <td className="px-4 py-3">
+                    <StatusBadge status={expense.status} size="sm"/>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-2 justify-end">
+                      <button 
+                        className="px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50 inline-flex items-center"
+                        title="View details"
+                      >
+                        <Eye size={15}/>
+                      </button>
+                      {expense.status === 'pending' && (
+                        <button 
+                          className="px-3 py-1.5 rounded-lg border bg-white hover:bg-gray-50 inline-flex items-center"
+                          title="Edit expense"
+                        >
+                          <Edit size={15}/>
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
