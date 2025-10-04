@@ -19,7 +19,7 @@ function App() {
       {/* App (protected) routes */}
       <Route path="/" element={<MainLayout />}>
         {/* Redirect root to dashboard for now */}
-        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route index element={<Navigate to="/login" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="users" element={<UserList />} />
         <Route path="settings" element={<Settings />} />
