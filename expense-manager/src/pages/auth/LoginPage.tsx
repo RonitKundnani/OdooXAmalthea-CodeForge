@@ -132,34 +132,34 @@ const LoginPage = () => {
               >
                 <div>
                   <div className="relative">
-                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Full Name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 ${
-                        errors.name ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
-                      }`}
-                    />
+                  <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 text-black ${
+                    errors.name ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                    }`}
+                  />
                   </div>
                   {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
                 </div>
 
                 <div>
                   <div className="relative">
-                    <Building2 className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="companyName"
-                      placeholder="Company Name"
-                      value={formData.companyName}
-                      onChange={handleChange}
-                      className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 ${
-                        errors.companyName ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
-                      }`}
-                    />
+                  <Building2 className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    name="companyName"
+                    placeholder="Company Name"
+                    value={formData.companyName}
+                    onChange={handleChange}
+                    className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 text-black ${
+                    errors.companyName ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                    }`}
+                  />
                   </div>
                   {errors.companyName && <p className="mt-1 text-xs text-red-500">{errors.companyName}</p>}
                 </div>
@@ -169,17 +169,17 @@ const LoginPage = () => {
             {/* Email */}
             <div>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 ${
-                    errors.email ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
-                  }`}
-                />
+              <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
+                className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 text-black ${
+                errors.email ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                }`}
+              />
               </div>
               {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
             </div>
@@ -187,24 +187,24 @@ const LoginPage = () => {
             {/* Password */}
             <div>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`w-full pl-12 pr-12 py-3 border rounded-xl focus:outline-none transition-all duration-200 ${
-                    errors.password ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
-                  }`}
-                />
-                <button 
-                  type="button" 
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
+              <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                className={`w-full pl-12 pr-12 py-3 border rounded-xl focus:outline-none transition-all duration-200 text-black ${
+                errors.password ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                }`}
+              />
+              <button 
+                type="button" 
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
               </div>
               {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
             </div>
@@ -219,29 +219,29 @@ const LoginPage = () => {
               >
                 <div>
                   <div className="relative">
-                    <Globe className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <select
-                      name="country"
-                      value={formData.country}
-                      onChange={handleChange}
-                      className={`w-full pl-12 pr-10 py-3 border rounded-xl focus:outline-none transition-all duration-200 appearance-none bg-white ${
-                        errors.country ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
-                      }`}
-                    >
-                      <option value="">Select Country</option>
-                      {countries.map(country => (
-                        <option key={country} value={country}>{country}</option>
-                      ))}
-                    </select>
-                    <svg 
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24" 
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
+                  <Globe className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <select
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    className={`w-full pl-12 pr-10 py-3 border rounded-xl focus:outline-none transition-all duration-200 appearance-none bg-white text-black ${
+                    errors.country ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                    }`}
+                  >
+                    <option value="">Select Country</option>
+                    {countries.map(country => (
+                    <option key={country} value={country}>{country}</option>
+                    ))}
+                  </select>
+                  <svg 
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                   </div>
                   {errors.country && <p className="mt-1 text-xs text-red-500">{errors.country}</p>}
                 </div>
