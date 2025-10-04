@@ -3,10 +3,12 @@ import { useState } from 'react';
 import { Mail, Lock, User, Building2, Globe, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const { login, signup } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,6 +20,7 @@ const LoginPage = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [animationKey, setAnimationKey] = useState(0);
+  const [apiError, setApiError] = useState<string>('');
 
   const countries = [
     'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 
@@ -54,23 +57,27 @@ const LoginPage = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setApiError('');
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
       if (isLogin) {
-        console.log('Login attempt:', { email: formData.email });
+        await login(formData.email, formData.password);
       } else {
-        console.log('Signup attempt:', formData);
+        await signup({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          companyName: formData.companyName,
+          country: formData.country
+        });
       }
       
       // Redirect to dashboard on success
       navigate('/dashboard');
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Authentication error:', error);
-      alert('An error occurred. Please try again.');
+      setApiError(error.message || 'An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -119,6 +126,13 @@ const LoginPage = () => {
               {isLogin ? 'Sign in to continue to your dashboard' : 'Create your company and admin in one step'}
             </p>
           </motion.div>
+
+          {/* API Error Message */}
+          {apiError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+              {apiError}
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">

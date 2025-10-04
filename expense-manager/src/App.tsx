@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from './components/layout/MainLayout';
 import { UserList } from './components/users/UserList';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import LoginPage from './pages/auth/LoginPage';
 import Dashboard from './pages/dashboard/Dashboard';
 import SubmitExpense from './pages/expenses/SubmitExpense';
@@ -16,24 +17,51 @@ function App() {
       {/* Public routes */}
       <Route path="/login" element={<LoginPage />} />
 
-      {/* App (protected) routes */}
-      <Route path="/" element={<MainLayout />}>
-        {/* Redirect root to dashboard for now */}
-        <Route index element={<Navigate to="/login" replace />} />
+      {/* Protected routes */}
+      <Route path="/" element={
+        <ProtectedRoute>
+          <MainLayout />
+        </ProtectedRoute>
+      }>
+        {/* Redirect root to dashboard */}
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        
+        {/* Dashboard - All roles */}
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="users" element={<UserList />} />
+        
+        {/* Users - Admin only */}
+        <Route path="users" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <UserList />
+          </ProtectedRoute>
+        } />
+        
+        {/* Settings - All roles */}
         <Route path="settings" element={<Settings />} />
+        
+        {/* Expenses - All roles */}
         <Route path="expenses">
           <Route path="submit" element={<SubmitExpense />} />
           <Route path="history" element={<History />} />
         </Route>
+        
+        {/* Approvals - Manager and Admin only */}
         <Route path="approvals">
-          <Route path="queue" element={<ManagerQueue />} />
+          <Route path="queue" element={
+            <ProtectedRoute allowedRoles={['admin', 'manager']}>
+              <ManagerQueue />
+            </ProtectedRoute>
+          } />
         </Route>
+        
+        {/* Workflow - Admin only */}
         <Route path="workflow">
-          <Route path="editor" element={<WorkflowEditor />} />
+          <Route path="editor" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <WorkflowEditor />
+            </ProtectedRoute>
+          } />
         </Route>
-        {/* Add more routes here as needed */}
       </Route>
     </Routes>
   );
