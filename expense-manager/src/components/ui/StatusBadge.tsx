@@ -17,15 +17,15 @@ const statusConfig = {
   },
   approved: {
     text: 'Approved',
-    bg: 'bg-teal-50',
-    textColor: 'text-teal-800',
-    dot: 'bg-teal-400',
+    bg: 'bg-[#BBDED6]',
+    textColor: 'text-[#115e59]',
+    dot: 'bg-[#61C0BF]',
   },
   rejected: {
     text: 'Rejected',
-    bg: 'bg-pink-50',
-    textColor: 'text-pink-800',
-    dot: 'bg-pink-400',
+    bg: 'bg-[#FFE1E2]',
+    textColor: 'text-[#8b3a3d]',
+    dot: 'bg-[#FFB6B9]',
   },
   draft: {
     text: 'Draft',

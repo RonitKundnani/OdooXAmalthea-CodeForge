@@ -1,10 +1,12 @@
+import React from 'react';
 import { useState } from 'react';
 import { Mail, Lock, User, Building2, Globe, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -63,8 +65,8 @@ const LoginPage = () => {
         console.log('Signup attempt:', formData);
       }
       
-      // Show success message or redirect
-      alert(isLogin ? 'Login successful!' : `Welcome to ${formData.companyName}! Your account has been created.`);
+      // Redirect to dashboard on success
+      navigate('/dashboard');
       
     } catch (error) {
       console.error('Authentication error:', error);
@@ -83,13 +85,13 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#FFB6B9] to-[#FAE3D9]">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-[#FFB6B9] to-[#FAE3D9]">
       <motion.div 
         key={animationKey}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl overflow-hidden relative z-10"
+        className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden relative z-10 border border-[#F5D9D2]"
       >
         {/* Decorative elements */}
         <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#BBDED6] rounded-full mix-blend-multiply blur-xl opacity-70" />
@@ -114,7 +116,7 @@ const LoginPage = () => {
               {isLogin ? 'Welcome Back' : 'Create Account'}
             </h2>
             <p className="text-gray-500 mt-2">
-              {isLogin ? 'Sign in to continue to your dashboard' : 'Start your journey with us today'}
+              {isLogin ? 'Sign in to continue to your dashboard' : 'Create your company and admin in one step'}
             </p>
           </motion.div>
 
@@ -138,7 +140,7 @@ const LoginPage = () => {
                       value={formData.name}
                       onChange={handleChange}
                       className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 ${
-                        errors.name ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                        errors.name ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
                       }`}
                     />
                   </div>
@@ -155,7 +157,7 @@ const LoginPage = () => {
                       value={formData.companyName}
                       onChange={handleChange}
                       className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 ${
-                        errors.companyName ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                        errors.companyName ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
                       }`}
                     />
                   </div>
@@ -175,7 +177,7 @@ const LoginPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 ${
-                    errors.email ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                    errors.email ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
                   }`}
                 />
               </div>
@@ -193,7 +195,7 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className={`w-full pl-12 pr-12 py-3 border rounded-xl focus:outline-none transition-all duration-200 ${
-                    errors.password ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                    errors.password ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
                   }`}
                 />
                 <button 
@@ -223,7 +225,7 @@ const LoginPage = () => {
                       value={formData.country}
                       onChange={handleChange}
                       className={`w-full pl-12 pr-10 py-3 border rounded-xl focus:outline-none transition-all duration-200 appearance-none bg-white ${
-                        errors.country ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6]'
+                        errors.country ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-[#BBDED6] focus:ring-1 focus:ring-[#BBDED6]'
                       }`}
                     >
                       <option value="">Select Country</option>
@@ -269,6 +271,19 @@ const LoginPage = () => {
               )}
             </motion.button>
           </form>
+
+          {/* Secondary CTA: Create company account (visible on Login) */}
+          {isLogin && (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={() => setIsLogin(false)}
+                className="w-full py-3.5 rounded-xl font-semibold text-[#115e59] bg-[#BBDED6] hover:brightness-105 transition-colors"
+              >
+                Create new company account
+              </button>
+            </div>
+          )}
 
           {/* Divider */}
           {isLogin && (

@@ -37,9 +37,9 @@ const mockUsers: User[] = [
 ];
 
 const roleColors = {
-  admin: 'bg-green-100 text-green-800',
-  manager: 'bg-teal-100 text-teal-800',
-  employee: 'bg-pink-100 text-pink-800',
+  admin: 'bg-green-100 text-green-800', // Admin green
+  manager: 'bg-[#BBDED6] text-[#115e59]', // Manager teal
+  employee: 'bg-[#FFE1E2] text-[#8b3a3d]', // Employee soft pink
 };
 
 export const UserList: React.FC = () => {
@@ -83,7 +83,7 @@ export const UserList: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow">
+    <div className="relative bg-white rounded-lg shadow">
       <div className="p-4 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
         <h2 className="text-lg font-medium text-gray-900">User Management</h2>
         <div className="mt-3 sm:mt-0 sm:ml-4">
@@ -205,6 +205,19 @@ export const UserList: React.FC = () => {
           }}
         />
       )}
+
+      {/* Floating Add User Button */}
+      <button
+        onClick={() => {
+          setEditingUser(null);
+          setIsFormOpen(true);
+        }}
+        className="fixed md:absolute bottom-6 right-6 md:bottom-4 md:right-4 inline-flex items-center px-4 py-3 rounded-full shadow-lg text-white"
+        style={{ backgroundColor: '#61C0BF' }}
+        aria-label="Add User"
+      >
+        <UserPlus size={18} className="mr-2" /> Add User
+      </button>
     </div>
   );
-};
+}
