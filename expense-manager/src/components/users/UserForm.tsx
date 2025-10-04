@@ -4,8 +4,8 @@ import { Button } from '../ui/Button';
 import { User } from '../../types';
 
 interface UserFormProps {
-  user: User | null;
-  onSave: (userData: Omit<User, 'id'>) => void;
+  user: any | null;
+  onSave: (userData: any) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -26,8 +26,14 @@ export const UserForm: React.FC<UserFormProps> = ({ user, onSave, onCancel }) =>
 
   useEffect(() => {
     if (user) {
-      const { id, ...userData } = user;
-      setFormData(userData);
+      setFormData({
+        name: user.name || '',
+        email: user.email || '',
+        role: user.role || 'employee',
+        status: 'active',
+        department: user.department || '',
+        joinDate: user.created_at ? new Date(user.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      });
     } else {
       // Reset form for new user
       setFormData({
@@ -75,7 +81,7 @@ export const UserForm: React.FC<UserFormProps> = ({ user, onSave, onCancel }) =>
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -84,14 +90,17 @@ export const UserForm: React.FC<UserFormProps> = ({ user, onSave, onCancel }) =>
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      onSave({
+    try {
+      await onSave({
         ...formData,
         ...(password && { password }), // Only include password if it was set
       });
+    } catch (error: any) {
+      // Error is already handled in parent component
+      setErrors({ submit: error.message });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -130,6 +139,12 @@ export const UserForm: React.FC<UserFormProps> = ({ user, onSave, onCancel }) =>
               <X size={24} />
             </button>
           </div>
+
+          {errors.submit && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+              {errors.submit}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

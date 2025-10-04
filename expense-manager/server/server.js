@@ -7,6 +7,7 @@ import { testConnection } from './config/database.js';
 import authRoutes from './routes/auth.js';
 import dashboardRoutes from './routes/dashboard.js';
 import expensesRoutes from './routes/expenses.js';
+import usersRoutes from './routes/users.js';
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/expenses', expensesRoutes);
+app.use('/api/users', usersRoutes);
 
 // 404 handler
 app.use((req, res) => {
