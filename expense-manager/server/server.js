@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.js';
 import dashboardRoutes from './routes/dashboard.js';
 import expensesRoutes from './routes/expenses.js';
 import usersRoutes from './routes/users.js';
+import ocrRoutes from './routes/ocr.js';
 
 // Load environment variables
 dotenv.config();
@@ -22,6 +23,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded files statically
+app.use('/uploads', express.static('uploads'));
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -43,6 +47,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/expenses', expensesRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/ocr', ocrRoutes);
 
 // 404 handler
 app.use((req, res) => {
