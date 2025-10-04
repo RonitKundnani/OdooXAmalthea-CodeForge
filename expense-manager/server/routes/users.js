@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { body, validationResult } from 'express-validator';
 import { pool } from '../config/database.js';
 import { authenticateToken, authorizeRole } from '../middleware/auth.js';
+import { sendWelcomeEmail, sendPasswordResetEmail } from '../services/emailService.js';
 
 const router = express.Router();
 
@@ -111,6 +112,18 @@ router.post('/', [
       'SELECT user_id, name, email, role, created_at FROM users WHERE user_id = ?',
       [newUserId]
     );
+
+    // Send welcome email with credentials
+    console.log(`📧 Attempting to send welcome email to: ${email}`);
+    try {
+      await sendWelcomeEmail(email, name, password, role);
+      console.log(`✅ Welcome email sent successfully to ${email}`);
+    } catch (emailError) {
+      console.error('❌ Failed to send welcome email:', emailError.message);
+      console.error('Full error:', emailError);
+      // Don't fail the user creation if email fails
+      // Just log the error and continue
+    }
 
     res.status(201).json({
       message: 'User created successfully',
@@ -282,6 +295,27 @@ router.post('/:id/reset-password', [
       'INSERT INTO audit_logs (user_id, action, entity_id) VALUES (?, ?, ?)',
       [adminUserId, 'PASSWORD_RESET', id]
     );
+
+    // Get user details for email
+    const [userDetails] = await pool.query(
+      'SELECT name, email FROM users WHERE user_id = ?',
+      [id]
+    );
+
+    // Send password reset email
+    if (userDetails.length > 0) {
+      try {
+        await sendPasswordResetEmail(
+          userDetails[0].email,
+          userDetails[0].name,
+          newPassword
+        );
+        console.log(`Password reset email sent to ${userDetails[0].email}`);
+      } catch (emailError) {
+        console.error('Failed to send password reset email:', emailError);
+        // Don't fail the password reset if email fails
+      }
+    }
 
     res.json({ message: 'Password reset successfully' });
 

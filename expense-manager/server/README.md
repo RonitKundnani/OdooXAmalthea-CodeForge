@@ -10,6 +10,7 @@ Backend API server for the Expense Management System built with Node.js, Express
 - **MySQL Database**: Robust relational database structure
 - **Secure**: Password hashing, JWT tokens, and input validation
 - **Audit Logging**: Track all important actions
+- **Email Notifications**: Automated email delivery with user credentials via Nodemailer
 
 ## 📋 Prerequisites
 
@@ -68,13 +69,21 @@ DB_PORT=3306
 # Server Configuration
 PORT=5000
 NODE_ENV=development
+CLIENT_URL=http://localhost:5173
 
 # JWT Secret (Change this to a random string in production!)
 JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
 JWT_EXPIRES_IN=7d
+
+# Email Configuration (Gmail)
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password-here
+EMAIL_FROM_NAME=Expense Manager
 ```
 
-**⚠️ IMPORTANT**: Change the `JWT_SECRET` to a strong random string in production!
+**⚠️ IMPORTANT**: 
+- Change the `JWT_SECRET` to a strong random string in production!
+- For email setup, see the [Email Setup Guide](../EMAIL_SETUP_GUIDE.md) for detailed instructions on configuring Gmail
 
 ### 4. Start the Server
 
@@ -101,7 +110,10 @@ server/
 ├── routes/
 │   ├── auth.js              # Authentication routes (login/signup)
 │   ├── dashboard.js         # Dashboard data routes
-│   └── expenses.js          # Expense CRUD routes
+│   ├── expenses.js          # Expense CRUD routes
+│   └── users.js             # User management routes
+├── services/
+│   └── emailService.js      # Email notification service
 ├── .env.example             # Environment variables template
 ├── package.json             # Dependencies and scripts
 ├── server.js                # Main server file
@@ -135,6 +147,17 @@ server/
 | POST | `/api/expenses` | Create new expense | Private |
 | PUT | `/api/expenses/:id` | Update expense | Private |
 | DELETE | `/api/expenses/:id` | Delete expense | Private |
+
+### Users (Admin Only)
+
+| Method | Endpoint | Description | Access |
+|--------|----------|-------------|--------|
+| GET | `/api/users` | Get all users in company | Admin |
+| GET | `/api/users/:id` | Get single user | Admin |
+| POST | `/api/users` | Create new user (sends email) | Admin |
+| PUT | `/api/users/:id` | Update user | Admin |
+| DELETE | `/api/users/:id` | Delete user | Admin |
+| POST | `/api/users/:id/reset-password` | Reset user password (sends email) | Admin |
 
 ## 🔐 Authentication
 
@@ -277,8 +300,14 @@ PORT=3001
 | DB_PORT | MySQL port | 3306 | No |
 | PORT | Server port | 5000 | No |
 | NODE_ENV | Environment | development | No |
+| CLIENT_URL | Frontend URL | http://localhost:5173 | No |
 | JWT_SECRET | JWT signing key | - | Yes |
 | JWT_EXPIRES_IN | Token expiry | 7d | No |
+| EMAIL_USER | Gmail address for sending emails | - | Yes* |
+| EMAIL_PASSWORD | Gmail App Password | - | Yes* |
+| EMAIL_FROM_NAME | Sender name in emails | Expense Manager | No |
+
+*Required for email functionality. See [Email Setup Guide](../EMAIL_SETUP_GUIDE.md)
 
 ## 🚀 Deployment
 
@@ -287,11 +316,13 @@ PORT=3001
 - [ ] Change `JWT_SECRET` to a strong random string
 - [ ] Set `NODE_ENV=production`
 - [ ] Use environment variables for sensitive data
+- [ ] Configure email service (Gmail App Password or dedicated email service)
 - [ ] Enable HTTPS
 - [ ] Set up proper CORS configuration
 - [ ] Configure database connection pooling
 - [ ] Set up logging and monitoring
 - [ ] Regular database backups
+- [ ] Consider using dedicated email service (SendGrid, AWS SES) for production
 
 ## 📄 License
 
