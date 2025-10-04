@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FileText, Users, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, Users, Settings, LogOut, Send, History as HistoryIcon, GitBranch, CheckSquare } from 'lucide-react';
 
 interface NavItemProps {
   to: string;
@@ -10,15 +10,15 @@ interface NavItemProps {
 
 const NavItem: React.FC<NavItemProps> = ({ to, icon, label }) => {
   const location = useLocation();
-  const isActive = location.pathname === to;
+  const isActive = location.pathname === to || location.pathname.startsWith(to + '/');
   
   return (
     <NavLink
       to={to}
       className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
         isActive 
-          ? 'bg-teal-50 text-teal-700' 
-          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+          ? 'bg-[#BBDED6] text-[#115e59]' 
+          : 'text-gray-600 hover:bg-[#FAE3D9] hover:text-gray-900'
       }`}
     >
       <span className={`mr-3 ${isActive ? 'text-teal-500' : 'text-gray-400'}`}>
@@ -41,31 +41,13 @@ export const Sidebar: React.FC = () => {
           </div>
           
           <nav className="flex-1 px-3 space-y-1">
-            <NavItem 
-              to="/dashboard" 
-              icon={<LayoutDashboard size={20} />} 
-              label="Dashboard" 
-            />
-            <NavItem 
-              to="/expenses" 
-              icon={<FileText size={20} />} 
-              label="My Expenses" 
-            />
-            <NavItem 
-              to="/approvals" 
-              icon={<FileText size={20} />} 
-              label="Approvals" 
-            />
-            <NavItem 
-              to="/users" 
-              icon={<Users size={20} />} 
-              label="User Management" 
-            />
-            <NavItem 
-              to="/settings" 
-              icon={<Settings size={20} />} 
-              label="Settings" 
-            />
+            <NavItem to="/dashboard" icon={<LayoutDashboard size={20} />} label="Dashboard" />
+            <NavItem to="/expenses/submit" icon={<Send size={20} />} label="Submit Expense" />
+            <NavItem to="/expenses/history" icon={<HistoryIcon size={20} />} label="Expense History" />
+            <NavItem to="/approvals/queue" icon={<CheckSquare size={20} />} label="Approvals" />
+            <NavItem to="/users" icon={<Users size={20} />} label="User Management" />
+            <NavItem to="/workflow/editor" icon={<GitBranch size={20} />} label="Workflow Editor" />
+            <NavItem to="/settings" icon={<Settings size={20} />} label="Settings" />
           </nav>
         </div>
         
